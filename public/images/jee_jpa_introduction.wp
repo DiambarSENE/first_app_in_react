@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns:jwt='corelib.services.web.javascript.jwt' lang='fr-FR'>
+
+
+	<head>
+		<meta content="IE=Edge" http-equiv="X-UA-Compatible"></meta>
+		<meta charset="ISO-8859-1"></meta>
+		<meta content="-1" http-equiv="Expires"></meta>
+		<meta content="no-cache" http-equiv="Pragma"></meta>
+		<link href="/Java/TutorialJEE/jee_jpa_introduction.wp" rel="canonical"></link>
+		
+		<link href="/corelib/services/web/javascript/jwt/Jwt.css" rel="stylesheet" type="text/css"></link>
+		<script type="text/javascript"> var __APPLICATION_PATH__ = '/';</script>
+		<script src="/corelib/services/web/javascript/Core.js" type="text/javascript"></script>
+		
+        <meta content="java ee,websocket,langage,java,liard,dominique,koor" name="keywords"></meta>
+        <meta content="Introduction de l'utilisation de JPA - Le tutoriel Jakarta/Java EE" name="description"></meta>
+        <meta content="KooR.fr" name="author"></meta>
+        <meta property='fb:admins' content='1422832511' />
+        <meta property='og:image' content='http://koor.fr/Images/FacebookAd.png' />
+        <style>
+            #menuRessources {
+                background-color: #97B4C4;
+                border-left: 1px solid #7397aB;
+                border-right: 1px solid #7397aB;
+                box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.3) inset;
+                color: white;
+            }
+        </style>
+
+
+		<title>KooR.fr - Introduction de l'utilisation de JPA - Le tutoriel Jakarta/Java EE</title>
+        <link href="../../Styles.css" rel="stylesheet" type="text/css"></link>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+	</head>
+	
+	<body>
+        <div xmlns:web="corelib.services.web.components">
+	<header>
+	    <div style="text-align: right">
+	        <a id='__id_auto_9_____id_auto_362__' href="/" target="_self">
+	            <img  id='__id_auto_9_____id_auto_363__' class='logo' title='Retour page d&#39;accueil KooR.fr' src="/Images/koorLogo.png"  alt="KooR.fr - Ressources pédagogiques pour programmeurs"  />
+	        </a>
+	    
+            <a href="https://fr.tipeee.com/koorfr/" id="tipeee" target="_blank">
+                <img alt="Participer au site avec un Tip" src="https://theme.zdassets.com/theme_assets/9469054/e57c693f55675691bbc1e4067a3cb5ebd37260ad.png" title="Participer au site avec un Tip"></img>
+            </a>
+                    
+	        <div id="searchBlock">
+                
+	            <form action="https://www.google.fr/search" id="searchForm" onsubmit="onSearch();">
+	                <input id="q" name="q" placeholder="Rechercher" type="search"></input>
+	                <img  id='__id_auto_9_____id_auto_365__' class='searchButton' title='Rechercher' src="/Images/search.png"  alt="Rechercher"  />
+	            </form>
+	        </div>
+	    </div>
+	    <nav>
+	        <a id='__id_auto_9___mnuHome' class='leftMenu' href="/" target="_self"><img  id='__id_auto_9_____id_auto_367__' style='width: 16px;' src="/Images/home.png"  alt="Return to home"  /></a>
+            <span id="classicMenuItems">
+	            <a id='__id_auto_9___mnuC' href="/C/Index.wp" target="_self">C</a>
+	            <a id='__id_auto_9___mnuCpp' href="/Cpp/Index.wp" target="_self">C++</a>
+	            <a id='__id_auto_9___mnuJava' href="/Java/Index.wp" target="_self">Java</a>
+	            <a id='__id_auto_9___mnuDotNet' href="/DotNet/Index.wp" target="_self">.NET</a>
+	            <a id='__id_auto_9___mnuPython' href="/Python/Index.wp" target="_self">Python</a>
+	            <a id='__id_auto_9___mnuPerl' href="/Perl/SupportPerl/slide1.wp" target="_self">Perl</a>
+	            <a id='__id_auto_9___mnuDevWeb' href="/DevWeb/Index.wp" target="_self">Dev. Web</a>
+	            <a id='__id_auto_9___mnuXML' href="/XML/Index.wp" target="_self">XML</a>
+	            <a id='__id_auto_9___mnuQuizz' href="/Test.wp" target="_self">Quiz</a>
+	            <a id='__id_auto_9___mnuOther' href="/Other/Index.wp" target="_self">Autres</a>
+            </span>
+            <span id="mobileMenuItems">
+                <img alt="Rubriques" src="/Images/rubriques.png" style="height: 20px; position: relative; top: 4px;"></img>
+                <a id='__id_auto_9_____id_auto_369__' style='padding-left: 2px;' href="javascript: displayMobileMenu();" target="_self">Rubriques</a>
+            </span>
+	        <a href="https://www.facebook.com/pages/Programmeurs/428448644003544" target="_blank">
+	            <img  id='__id_auto_9_____id_auto_371__' title='Notre page Facebook' src="/Images/facebookWhite.png"  alt="Notre page Facebook"  />
+	        </a>
+	        <script> document.getElementById('__id_auto_9___mnuJava').style.cssText='text-decoration: underline; background:#0fb5eb';</script>
+	    </nav>
+	</header>
+    <div> </div>
+	<script type="text/javascript">
+	
+        function displayMobileMenu() {
+            var container = $("mobileMenuItems");
+            if ( container.popup != null ) {
+                document.body.removeChild( container.popup );
+                container.popup = null;
+            } else {
+	            var popup = document.createElement( "div" );
+	            popup.id = "mainPopupMenu";
+	            popup.style.top = (computeAbsolutePosition( container ).y + 42) + "px";
+	            popup.style.left = (computeSize( document.body ).width * 0.2) + "px";
+	            popup.innerHTML = $("classicMenuItems").innerHTML;
+	            document.body.appendChild( popup );
+	            container.popup = popup;
+	        }
+        }
+	
+        function onSearch() {
+            var prefix = "site:koor.fr ";
+            $("q").value = prefix + $("q").value.replace( prefix, "" );
+        }
+               	
+	    addEventHandler( document.querySelector( ".searchButton" ), "onclick", function() {	        
+            onSearch();
+	        $('searchForm').submit();
+	    }); 
+	 
+	    addEventHandler( window, "onscroll", function() {
+	       var delta = window.scrollY ? window.scrollY : window.pageYOffset;
+	       document.querySelector( "header" ).className = Math.min( delta, 30 ) == 30 ? "smallBar" : "";
+	    });
+
+        if ( document.location.href.indexOf( "http://localhost" ) == -1 ) {
+	        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');  
+	        ga('create', 'UA-64843303-1', 'auto');
+	        ga('send', 'pageview');
+        }
+        
+        
+        
+        function zoomInSupport( image ) {
+            image.addEventListener( "click", function( event ) {
+                if ( image.width != image.naturalWidth ) {
+                    image.style.cursor = "zoom-in";
+                    let shadowNode = document.createElement( "div" );
+                    shadowNode.className = "screenshotShadow";
+                    document.body.appendChild( shadowNode );
+
+                    let imageNode = document.createElement( "img" );
+                    imageNode.className = "screenshotOriginalImage";
+                    imageNode.src = image.src;
+                    imageNode.style.left = ((window.innerWidth - image.naturalWidth - 26) / 2) + "px";
+                    imageNode.style.top = ((window.innerHeight - image.naturalHeight - 26) / 2) + "px";
+                    document.body.appendChild( imageNode );
+
+                    shadowNode.addEventListener( "click", function( event ) {
+                        document.body.removeChild( shadowNode );
+                        document.body.removeChild( imageNode );
+                    } );
+
+                    imageNode.addEventListener( "click", function( event ) {
+                        document.body.removeChild( shadowNode );
+                        document.body.removeChild( imageNode );
+                    } );
+                }
+            });
+            
+
+            image.addEventListener( "mouseover", function( event ) {
+                image.style.cursor = ( image.width != image.naturalWidth ) ? "zoom-in" : null;
+            } );
+        }
+        
+        function shareOn( socialNetwork ) {
+	        var w=600;var h=380;
+	        var x=Number((window.screen.width-w)/2);
+	        var y=Number((window.screen.height-h)/2);
+	        
+	        var url;
+	        switch( socialNetwork ) {
+	           case "facebook":
+    	           url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(location.href) + "&amp;title=" + encodeURIComponent(document.title);
+	               break;
+	           case "twitter":
+	               url = "http://twitter.com/intent/tweet?status=" + encodeURIComponent(document.title) + " - " + encodeURIComponent(location.href);
+	               break;
+	        }
+	        
+	        window.open( url, '', 'width=' + w + ',height=' + h + ',left=' + x + ',top=' + y + ', scrollbars=no' );
+        }       
+        
+        
+        /* window.addEventListener( "load", function( event ) {
+            var cookie = new CookieManager();
+            if ( cookie.getValue( "acceptCookies" ) == null ) {
+                document.cookiesMessage = document.createElement( "div" );
+                document.cookiesMessage.className = "cookiesMessage";
+                document.cookiesMessage.innerHTML = "\u003cb\u003eCe site n'exploite aucune donnée personnelle !\u003c/b\u003e\u003cbr/\u003e\u003cbr/\u003e " 
+                                                  + "Pour exister, ce site a besoin des réseaux sociaux (Facebook, Google+ et Twitter) ainsi que la régie de publicité Google. "
+                                                  + "\u003cb\u003ePar contre, eux les utilisent\u003c/b\u003e. En utilisant ce site, vous acceptez que des cookies soit utilisés par ces services, "
+                                                  + "afin de vous proposer des informations adaptées à vos centres d'intérêts.\u003cbr/\u003e\u003cbr/\u003e"
+                                                  + "Si vous souhaitez que ce site puisse continuer à être maintenu, merci de ne pas y utiliser de bloqueurs de publicités.\u003cbr/\u003e\u003cbr/\u003e"
+                                                  + "\u003cdiv style='text-align: center'\u003e\u003cu\u003e\u003cb\u003eFermer\u003c/b\u003e\u003c/u\u003e\u003c/div\u003e";
+                document.body.appendChild( document.cookiesMessage );
+                
+                document.cookiesMessage.addEventListener( "click", function( event ) {
+                    this.style.display = "none";
+                    cookie.setValue( "acceptCookies", true );
+                });
+            }
+        } ); */
+        
+	</script>
+	<div class="sideBar">
+        Bug
+        <a id="comment">
+            <img  id='__id_auto_9_____id_auto_376__' class='sideBarTwitter' title='Suggérer des Améliorations / Corrections' src="/Images/comment.png"  alt="Suggérer des Améliorations / Corrections"  />
+        </a>
+
+        <br />
+
+	    Share
+        <a href="javascript: shareOn( 'facebook' );">
+    	    <img  id='__id_auto_9_____id_auto_379__' class='sideBarFacebook' title='Partager sur Facebook' src="/Images/sideBarFacebook.png"  alt="Partager sur Facebook"  />
+    	</a>
+        <a href="javascript: shareOn( 'twitter' );">
+            <img  id='__id_auto_9_____id_auto_381__' class='sideBarTwitter' title='Partager sur Twitter' src="/Images/sideBarTwitter.png"  alt="Partager sur Twitter"  />
+        </a>
+	</div>
+	<div class="commentBlockOff" id="commentBlock">
+	   <div style="padding: 20px;">
+	       <h1>Améliorations / Corrections</h1>
+	       <p>
+	           Vous avez des améliorations (ou des corrections) à proposer pour ce document : 
+	           je vous remerçie par avance de m'en faire part, cela m'aide à améliorer le site. 
+	           <br /><br />
+	           
+	           Emplacement : <input id="txtWhere" type="text"></input>
+	           <br /><br />
+	           
+	           Description des améliorations : <br />
+	           <textarea id="txtWhat" placeholder="L'envoi est anynome. Si vous souhaitez un retour, veuillez mentionner votre email."></textarea>
+
+               <div style="text-align: right">
+                   <input id="send" type="button" value="Envoyer"></input>
+                   <input id="cancel" type="button" value="Annuler"></input>
+               </div>
+	       </p>
+	   </div>
+	</div>
+	<script type="text/javascript">
+
+        $("comment").addEventListener( "click", function() {
+            if ( window["currentSlide"] ) $("txtWhere").value = "Diapositive " + currentSlide;
+            let commentBlock = $("commentBlock");
+            commentBlock.className = commentBlock.className == "commentBlockOn" ? "commentBlockOff" : "commentBlockOn";
+            commentBlock.style.zIndex = 10000;
+        } );
+        $("send").addEventListener( "click", function() {
+            let where = $("txtWhere").value.trim();
+            let what = $("txtWhat").value.trim();
+            
+            if ( where != "" || what != "" ) {
+	            let caller = new AjaxPostCall( "/HistorizeEvol", "text", true, 0 );
+		        caller.onError = function() { console.log( "Cannot historize evolution " ); };
+		        caller.send( 
+		            "url=" + encodeURIComponent( document.location.href ) + "\u0026ts=" + new Date().getTime() + 
+		            "\u0026where=" + encodeURIComponent( where ) + "\u0026what=" + encodeURIComponent( what )
+		        );
+                window.thanksNode = document.createElement( "div" );
+                window.thanksNode.className = "thanks";
+                window.thanksNode.innerHTML = "Merci de votre participation !";
+                document.body.appendChild( window.thanksNode );
+                window.setTimeout( function() { window.thanksNode.style.opacity = 0; }, 3000 ); 
+		    }
+	        $("commentBlock").className = "commentBlockOff";            
+        } );
+        $("cancel").addEventListener( "click", function() {
+            $("commentBlock").className = "commentBlockOff";    
+        } );
+	</script>
+</div>
+        <div style="display: block;"></div>
+
+        <aside class="navigationPane" xmlns:ads="com.infinisoftware.koor.ads" xmlns:web="corelib.services.web.components">
+    <div class="back">
+        <a href="/Java/Index.wp"><img src="/Images/leftArrow.png"></img>Retour Java SE</a>
+    </div>
+    <style>a.back:hover { color: white; }</style>
+    <div style="padding: 10px;">
+    
+        <h1 style="text-align: left; color: black;">Le tutoriel Java/Jakarta EE</h1>
+
+        <b>Nos documents</b> <br />
+        <div style="padding-left: 20px">
+            <a id='__id_auto_22__' href="/Java/JavaEE.wp" target="_self">Nos vidéos &amp; nos supports de cours</a> <br />
+            <a id='__id_auto_24__' href="/Java/TutorialJEE/jee_application_servers.wp" target="_self">Comparatifs des serveurs d'applications JEE</a> <br />
+        </div><br />
+
+        <b>Développement Web Java EE</b> <br />
+        <div style="padding-left: 20px">
+            <a id='__id_auto_30__' href="/Java/TutorialJEE/jee_eclipse_tomcat.wp" target="_self">Intégration Tomcat/Eclipse</a> <br />
+            <a id='__id_auto_32__' href="/Java/TutorialJEE/jee_servlet.wp" target="_self">Notre première servlet</a> <br />
+            <a id='__id_auto_34__' href="/Java/TutorialJEE/jee_jsp.wp" target="_self">Notre première JSP</a> <br />
+            <a id='__id_auto_36__' href="/Java/TutorialJEE/jee_servlet_jsp_mvc.wp" target="_self">Mise en place d'une architecture MVC</a> <br />
+            <a id='__id_auto_38__' href="/Java/TutorialJEE/jee_servlet_life_cycle.wp" target="_self">Cycle de vie d'une servlet</a> <br />
+            <a id='__id_auto_40__' href="/Java/TutorialJEE/jee_servlet_listeners.wp" target="_self">Web listeners</a> <br />
+            <a id='__id_auto_42__' href="/Java/TutorialJEE/jee_servlet_filters.wp" target="_self">Web Filters</a> <br />
+            <a id='__id_auto_44__' href="/Java/TutorialJEE/jee_jdbc_sql_injection.wp" target="_self">JDBC et les attaques par injection SQL</a> <br />
+            <a id='__id_auto_46__' href="/Java/TutorialJEE/jee_attaques_xss.wp" target="_self">Contrer les attaques XSS</a> <br />
+            <a id='__id_auto_48__' href="/Java/TutorialJEE/jee_taglib.wp" target="_self">Création d'une librairie de Tags (TagLib)</a> <br />
+            <a id='__id_auto_50__' href="/Java/TutorialJEE/jee_el_jstl.wp" target="_self">Utilisation des APIs EL et JSTL</a> <br />
+            <a id='__id_auto_52__' href="/Java/TutorialJEE/jee_servlet_upload.wp" target="_self">Servlet d'upload de fichiers</a> <br />
+            <a id='__id_auto_54__' href="/Java/TutorialJEE/jee_servlet_export_xlsx.wp" target="_self">Servlet d'export de données au format XLSX</a> <br />
+            <a id='__id_auto_56__' href="/Java/TutorialJEE/jee_servlet_export_pdf.wp" target="_self">Servlet d'export de données au format PDF</a> <br />
+            <a id='__id_auto_58__' href="/Java/TutorialJEE/jee_war_deploiement.wp" target="_self">Génération d'un WAR et déploiement manuel</a> <br />
+        </div><br />
+
+        <b>JSF : JavaServer Faces</b> <br />
+        <div style="padding-left: 20px">
+            <a id='__id_auto_64__' href="/Java/TutorialJEE/jee_eclipse_glassfish.wp" target="_self">Intégration GlassFish/Eclipse</a> <br />
+            <a id='__id_auto_66__' href="/Java/TutorialJEE/jee_jsf_premiere_page.wp" target="_self">Votre première page JSF</a> <br />
+            <a id='__id_auto_68__' href="/Java/TutorialJEE/jee_jsf_validation.wp" target="_self">Validation d'un formulaire JSF</a> <br />
+            <a id='__id_auto_70__' href="/Java/TutorialJEE/jee_jsf_validation_annotations.wp" target="_self">Validation d'un formulaire JSF par annotations</a> <br />
+            <a id='__id_auto_72__' href="/Java/TutorialJEE/jee_jsf_listeners.wp" target="_self">La gestion des événements côté serveur</a> <br />
+            <a id='__id_auto_74__' href="/Java/TutorialJEE/jee_jsf_data_binding.wp" target="_self">Liaison aux données dans vos formulaires JSF</a> <br />
+            <a id='__id_auto_76__' href="/Java/TutorialJEE/jee_jsf_i18n.wp" target="_self">Internationalisation de pages JSF</a> <br />
+            <a id='__id_auto_78__' href="/Java/TutorialJEE/jee_jsf_template.wp" target="_self">Définition d'un template pour vos facelets</a> <br />
+        </div> <br />
+        
+        <b>JPA : Java Persitence API</b> <br />
+        <div style="padding-left: 20px">
+            <span>Introduction de l'utilisation de JPA</span> <br />
+            <a id='__id_auto_86__' href="/Java/TutorialJEE/jee_jpa_logging.wp" target="_self">JPA et la journalisation avec Hibernate</a> <br />
+            <a id='__id_auto_88__' href="/Java/TutorialJEE/jee_jpa_one_to_one.wp" target="_self">Mapping d'une relation @OneToOne</a> <br />
+            <a id='__id_auto_90__' href="/Java/TutorialJEE/jee_jpa_many_to_one.wp" target="_self">Mapping d'une relation @ManyToOne</a> <br />
+            <a id='__id_auto_92__' href="/Java/TutorialJEE/jee_jpa_one_to_many.wp" target="_self">Mapping d'une relation @OneToMany</a> <br />
+            <a id='__id_auto_94__' href="/Java/TutorialJEE/jee_jpa_many_to_many.wp" target="_self">Mapping d'une relation @ManyToMany</a> <br />
+            <a id='__id_auto_96__' href="/Java/TutorialJEE/jee_jpa_mapping_collections.wp" target="_self">Mapping des collections</a> <br />
+            <a id='__id_auto_98__' href="/Java/TutorialJEE/jee_jpa_mapping_heritage.wp" target="_self">Mapping d'une relation d'héritage</a> <br />
+            <a id='__id_auto_100__' href="/Java/TutorialJEE/jee_jpa_mapping_exercice.wp" target="_self">Exemple d'un mapping complet</a> <br />
+            <a id='__id_auto_102__' href="/Java/TutorialJEE/jee_jpa_mapping_cascade.wp" target="_self">La gestion des cascades</a> <br />
+            <!--  
+            <web:Link href="/Java/TutorialJEE/jee_jpa_war.wp" smart="true">Intégration de JPA dans un WAR</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_lazy_loading.wp" smart="true">Le lazy-loading</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_jpql_select.wp" smart="true">Sélectionner des données avec JPQL</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_jpql_update.wp" smart="true">Mise à jour de données avec JPQL</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_transaction.wp" smart="true">La gestion des transactions</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_strategie_chargement.wp" smart="true">Les différentes stratégies de chargement</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_cache_premier_niveau.wp" smart="true">La gestion du cache de premier niveau</web:Link> <br/>
+            <web:Link href="/Java/TutorialJEE/jee_jpa_cache_second_niveau.wp" smart="true">La gestion du cache de second niveau</web:Link> <br/>
+              -->
+        </div> <br />
+        
+        
+        <b>Les WebSockets</b>
+        <div style="padding-left: 20px">
+            <a id='__id_auto_107__' href="/Java/TutorialJEE/jee_websocket_chat.wp" target="_self">Introduction à l'API des WebSockets</a> <br />
+        </div> <br />
+           
+        <br /><hr /><br />
+        <div style="text-align: center">
+            <div xmlns:web="corelib.services.web.components">
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" type="text/css"></link>
+	
+    
+    
+    
+    
+    
+    
+    <a id='__id_auto_114___brickBreaker' style='display: inline-block; width: 200px; text-decoration: none;' href="/gameGPS?id=com.infinisoftware.brickbreaker" target="_blank">
+        <div style="text-align: right; font-family: Orbitron, verdana, arial; font-size: 12px;">Android Game</div>
+        <img  id='__id_auto_114_____id_auto_355__' style='width:200px' title='Click to go to Google Play Store' src="/Images/ads/BrickBreaker.png"  alt="Brick Breaker - Android Game"  />
+    </a>
+    
+</div>
+        </div>
+    
+        <br /><br /><br /><br /><br /><br />
+    
+    </div>
+</aside><script src="/navigationPane.js" type="text/javascript"></script>
+
+        <div class="pageContent">
+            <div style="margin: auto; text-align: center">
+
+    <script async="async" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" data-ad-client="ca-pub-6351935933260946" data-ad-slot="3406056112" style="display:inline-block;width:728px;height:90px"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+</div>
+         
+            <h1>Introduction de l'utilisation de JPA</h1>
+            
+            <div style="text-align: center">
+                <a class="navigationButton" href="javascript: document.querySelector( 'header nav a' ).click();" style="float: left; margin-right: 10px; padding-left: 10px; padding-right: 0px;">
+                    <img src="/Images/hamburger.png" style="width: 32px;"></img>
+                </a>
+                <a class="navigationButton" href="jee_jsf_template.wp" style="float: left;">
+                    <img src="/Images/leftArrow.png" style="width: 32px;"></img>
+                    Définition d'un template pour vos facelets
+                </a>
+                <a class="navigationButton" href="jee_jpa_logging.wp" style="float: right;">
+                    <img src="/Images/rightArrow.png" style="width: 32px;"></img>
+                    JPA et la journalisation avec Hibernate
+                </a>
+            </div> <br /> <br /> <br />
+	        
+            <p style="text-indent: 0px;" xmlns:web="corelib.services.web.components">
+    <b>Accès rapide :</b> <br />
+
+<span style="white-space: pre">      </span><a href="#video">La vidéo</a><br /><span style="white-space: pre">      </span><a href="#introduction">La persistance des données avec Java EE</a><br /><span style="white-space: pre">      </span><a href="#helloWorld">Un premier exemple d'utilisation de JPA</a><br /><span style="white-space: pre">            </span><a href="#database">La base de données utilisée</a><br /><span style="white-space: pre">      </span><a href="#article">La classe Article</a><br /><span style="white-space: pre">      </span><a href="#mapping">Le mapping JPA</a><br /><span style="white-space: pre">            </span><a href="#configuration">La configuration de votre moteur de persistance</a><br /><span style="white-space: pre">            </span><a href="#api">Utilisation de l'API JPA</a><br /></p>
+            
+
+            <a name="video"></a><h2>La vidéo</h2>
+            
+            <p>
+                Cette vidéo vous présente l'API JPA (Java Persistence API) incluse dans les spécifications Java/Jakarta EE. 
+                JPA précise les modalités de fonctionnement d'un ORM (Object Relational Mapping) Java à base d'annotations.
+                Plusieurs implémentations JPA existent (OpenJPA, Eclipse Link et Hibernate) : nous utiliserons Hibernate.
+            </p>
+
+            <div style="text-align: center">
+                <div style="display: inline-block; vertical-align: top; margin-bottom: 10px; text-align: center; margin: auto;" xmlns:web="corelib.services.web.components">
+    
+    <iframe allowfullscreen="allowfullscreen" frameborder="0" id="__id_auto_138__Frame" style="display: inline-block; box-sizing: border-box;"></iframe>
+    <script type="text/javascript">
+        var frame = $("__id_auto_138__Frame");
+        frame.src = "https://www.youtube.com/embed/FeZ5BC0PirQ";
+        frame.style.width = 700 + "px";
+        frame.style.height = 400 + "px";
+    </script>
+    <br />
+    
+    <span id='__id_auto_138_____id_auto_400__' style='font-weight: bold;' class='text'>Introduction de l'utilisation de JPA</span>
+
+</div>
+            </div>
+            
+
+            <a name="introduction"></a><h2>La persistance des données avec Java EE</h2>
+            
+            <p>
+                Java SE permet déjà de synchroniser des données dans une base de données relationnelle : pour ce faire vous pouvez utiliser l'API JDBC
+                (Java DataBase Connectivity). Vous pouvez consulter <a href="../JDBC.wp">notre tuto à ce sujet</a>.
+                Pour autant, on peut considérer JDBC comme une API de bas niveau. La plate-forme JEE (Java EE ou dorénavant Jakarta EE) propose une couche d'abstraction
+                par-dessus JDBC : JPA (Java Persistence API). Bien entendu JPA ne permet d'adresser qu'à des bases de données relationnelles (à l'instar de JDBC).
+            </p>
+            
+            <div style="text-align: center"><img src="Images/jpa-apis.png" style="width: 400px;"></img></div>
+            
+            <p>
+                En fait JPA est une spécification d'ORM (Object Relational Mapping) pour Java. Un ORM, comme son nom l'indique, permet de faire le lien entre le 
+                monde objet et le monde de la base de données relationnelle. Un ORM doit permettre de produire automatiquement les ordres SQL relatifs aux actions
+                CRUD (Create/Read/Update/Delete) sur vos objets et de les engager en base de données. 
+                Il existe des ORM pour quasiment tous les langages de programmation et donc aussi pour Java.
+            </p>
+
+            <p>
+                JPA étant une spécification (dit autrement un PDF), il en existe plusieurs implémentations. Les trois plus connus sont Hibernate (RedHat), 
+                Eclipse Link (de la fondation Eclipse, vous vous en doutez) et Open JPA (de la fondation Apache). Le serveur Glassfish, que nous avons choisit
+                d'utiliser, embarque l'implémentation Eclipse Link. 
+            </p>
+
+            <p>
+                Les intérêts à utiliser un ORM compatible JPA sont les suivants :
+            </p>
+
+            <ul>
+                <li><p>
+                    <b>Abstraction quasi totale du langage SQL</b> : c'est le rôle de l'ORM de produire le code SQL équivalent à vos actions. 
+                </p></li>
+                <li><p>
+                    <b>Indépendance vis-à-vis de la base de données utilisée </b> : comme vous ne produisez pas le code SQL, vous n'êtes pas lié à une base de données
+                    précise. Les ORM JPA peuvent travailler sur toutes les bases de données manipulables par JDBC. Vous êtes donc libre de changer votre SGBDr
+                    (Système de Gestion de Base de Données relationnel) à tout moment.
+                </p></li>
+                <li><p>
+                    <b>Meilleure productivité</b> : comparer à JDBC, vous avez beaucoup moins de code à produire (et notamment avec le SQL).
+                </p></li>
+                <p><p>
+                    <b>Risque d'injection SQL fortement réduit</b> : vu que vous ne produisez plus de codes SQL, vous évitez un grand nombre d'attaques basées sur 
+                    une mauvaise utilisation de ce langage.
+                </p></p>
+            </ul>
+
+            <p>
+                Par contre, il y a des risques à utiliser JPA :
+            </p>
+
+            <ul>
+                <li><p>
+                    JPA consiste en une surcouche logicielle par-dessus JDBC : ça peut donner lieu à plus de code à exécuter.
+                </p></li>
+                <li><p>
+                    Les concepts proposés par JPA sont de très haut niveau et relativement subtils (cache de données, lazy loading, ...) : mal utilisés,
+                    ces mécanismes peuvent fortement dégrader les performances de vos programmes.
+                    Il est donc impératif de bien maîtriser votre ORM afin d'éviter des gros pièges.
+                </p></li>
+            </ul>
+
+
+            <a name="helloWorld"></a><h2>Un premier exemple d'utilisation de JPA</h2>
+            
+            <p>
+                Nous allons commencer par un premier exemple très simple d'utilisation de JPA : nous allons chercher à mapper une table, en base de données, contenant 
+                des articles à une classe Article. Dans un premier temps, nous allons travailler hors d'un serveur d'applications JEE.
+                Nous allons juste lancer un programme Java, utilisant JPA, en mode console. Comme nous serons hors d'un serveur d'applications, nous n'aurons pas accès
+                par défaut, à une implémentation JPA. Il faut donc en télécharger une. Je vous propose d'utiliser Hibernate. Veuillez aller sur le site 
+                <a href="http://www.hibernate.org" target="_blank">http://www.hibernate.org</a> pour télécharger le logiciel. Il est constitué d'un certain nombre
+                de fichiers Jar (normalement, vous avez le logiciel ainsi que toutes les dépendances requises à son fonctionnement).
+            </p>
+            
+            <p>
+                Veuillez créer un nouveau projet Java et ajouter l'ensemble des fichiers Jar au CLASSPATH (au build path, si vous utilisez Eclipse).
+                N'oubliez pas non plus de prendre le jar associé au driver JDBC de votre base de données (JPA est une sur-couche à JDBC).
+            </p>
+
+            <a name="database"></a><h3>La base de données utilisée</h3>
+            
+            <p>
+                Pour ce qui est de la base de données, nous allons rester sur celle déjà utilisée durant les chapitres précédents. Pour rappel, nous avons utilisé
+                le serveur MariaDB et nous y avons créé une petite base de données pour un site de vente en ligne. Dans ce chapitre nous allons nous intéresser
+                uniquement à la table <code>T_Articles</code> stockant les articles proposés. Pour rappel, voici le code SQL utilisé pour sa création. 
+            </p>
+
+            <pre class="SectionCode">CREATE TABLE T_Articles (
+    IdArticle           int         PRIMARY KEY AUTO_INCREMENT,
+    Description         text        NOT NULL,
+    Brand               text        NOT NULL,
+    UnitaryPrice        double      NOT NULL
+);</pre>
+
+            <a name="article"></a><h2>La classe Article</h2>
+            
+            <p>
+                Il nous faut maintenant produire une classe Java permettant la manipulation des articles. Nous allons repartir de la classe proposée dans un 
+                précédent tuto dédié à JDBC. En voici son code 
+            </p>
+    
+            <center><table class='JwtCodeColorer' border='0' cellspacing='0' cellpadding='0' id='__id_auto_176__'><tr>
+<td style='text-align: right; width: 1%;' valign='top'><pre class='JwtCodeColorerLineNumbers'>
+ 1 
+ 2 
+ 3 
+ 4 
+ 5 
+ 6 
+ 7 
+ 8 
+ 9 
+ 10 
+ 11 
+ 12 
+ 13 
+ 14 
+ 15 
+ 16 
+ 17 
+ 18 
+ 19 
+ 20 
+ 21 
+ 22 
+ 23 
+ 24 
+ 25 
+ 26 
+ 27 
+ 28 
+ 29 
+ 30 
+ 31 
+ 32 
+ 33 
+ 34 
+ 35 
+ 36 
+ 37 
+ 38 
+ 39 
+ 40 
+ 41 
+ 42 
+ 43 
+ 44 
+ 45 
+ 46 
+ 47 
+ 48 
+ 49 
+ 50 
+ 51 
+ 52 
+ 53 
+ 54 
+ 55 
+ 56 
+ 57 
+</pre></td>
+<td valign='top'><pre class='JwtCodeColorerLines'>
+<span style='color:rgb(127,0,85); font-weight: bold'>package</span> fr.koor.webstore.business;
+
+<span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>class</span> Article {
+
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> <span style='color:rgb(127,0,85); font-weight: bold'>int</span> idArticle;
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> String description;
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> String brand;
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> <span style='color:rgb(127,0,85); font-weight: bold'>double</span> price;
+    
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> Article() {
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>( <span style='color:rgb(42,0,255)'>"unknown"</span>, <span style='color:rgb(42,0,255)'>"unknown"</span>, 0 );
+    }
+    
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> Article( String description, String brand, <span style='color:rgb(127,0,85); font-weight: bold'>double</span> price ) {
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>.setDescription( description );
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>.setBrand( brand );
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>.setPrice( price );
+    }
+
+
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>int</span> getIdArticle() {
+        <span style='color:rgb(127,0,85); font-weight: bold'>return</span> idArticle;
+    }
+        
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> String getDescription() {
+        <span style='color:rgb(127,0,85); font-weight: bold'>return</span> description;
+    }
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>void</span> setDescription(String description) {
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>.description = description;
+    }
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> String getBrand() {
+        <span style='color:rgb(127,0,85); font-weight: bold'>return</span> brand;
+    }
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>void</span> setBrand(String brand) {
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>.brand = brand;
+    }
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>double</span> getPrice() {
+        <span style='color:rgb(127,0,85); font-weight: bold'>return</span> price;
+    }
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>void</span> setPrice(<span style='color:rgb(127,0,85); font-weight: bold'>double</span> price) {
+        <span style='color:rgb(127,0,85); font-weight: bold'>this</span>.price = price;
+    }
+    
+    <span style='color:rgb(100,100,100)'>@Override</span>
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> String toString() {
+        <span style='color:rgb(127,0,85); font-weight: bold'>return</span> <span style='color:rgb(42,0,255)'>"Article [idArticle="</span> + idArticle + <span style='color:rgb(42,0,255)'>", description="</span> + description +
+               <span style='color:rgb(42,0,255)'>", brand="</span> + brand + <span style='color:rgb(42,0,255)'>", price="</span> + price + <span style='color:rgb(42,0,255)'>"]"</span>;
+    }
+    
+}
+</pre></td>
+</tr>
+<caption align='bottom' class='JwtCodeColorerCaption'>Une classe de manipulation d'articles</caption>
+</table></center>
+
+
+
+            <a name="mapping"></a><h2>Le mapping JPA</h2>
+            
+            <p>
+                Nous allons maintenant traiter de la partie la plus importante : le mapping JPA. C'est lui qui va faire le lien entre le monde de la base de données
+                et le monde Objet. Ce mapping se définit sur votre classe grâce à un jeu d'annotations.
+            </p>
+            
+            <center><table class='JwtCodeColorer' border='0' cellspacing='0' cellpadding='0' id='__id_auto_179__'><tr>
+<td style='text-align: right; width: 1%;' valign='top'><pre class='JwtCodeColorerLineNumbers'>
+ 1 
+ 2 
+ 3 
+ 4 
+ 5 
+ 6 
+ 7 
+ 8 
+ 9 
+ 10 
+ 11 
+ 12 
+ 13 
+ 14 
+ 15 
+ 16 
+ 17 
+ 18 
+ 19 
+ 20 
+ 21 
+ 22 
+ 23 
+ 24 
+ 25 
+ 26 
+</pre></td>
+<td valign='top'><pre class='JwtCodeColorerLines'>
+<span style='color:rgb(127,0,85); font-weight: bold'>package</span> fr.koor.webstore.business;
+
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.Column;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.Entity;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.GeneratedValue;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.GenerationType;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.Id;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.Table;
+
+
+<span style='color:rgb(100,100,100)'>@Entity</span> <span style='color:rgb(100,100,100)'>@Table</span>( name=<span style='color:rgb(42,0,255)'>"T_Articles"</span> )
+<span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>class</span> Article {
+
+    <span style='color:rgb(100,100,100)'>@Id</span> <span style='color:rgb(100,100,100)'>@GeneratedValue</span>( strategy=GenerationType.IDENTITY )
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> <span style='color:rgb(127,0,85); font-weight: bold'>int</span> idArticle;
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> String description;
+    
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> String brand;
+    
+    <span style='color:rgb(100,100,100)'>@Column</span>( name=<span style='color:rgb(42,0,255)'>"UnitaryPrice"</span> ) 
+    <span style='color:rgb(127,0,85); font-weight: bold'>private</span> <span style='color:rgb(127,0,85); font-weight: bold'>double</span> price;
+    
+    <span style='color:rgb(0,128,0)'>// La suite de la class ...</span>
+    
+}
+</pre></td>
+</tr>
+<caption align='bottom' class='JwtCodeColorerCaption'>Ajout du mapping JPA</caption>
+</table></center>
+
+            
+            <ul>
+                <li><p>
+		            L'annotation <code>@Entity</code> dit que la classe <code>Article</code> est soumisse à persistance : c'est une entité persistante.
+		        </p></li>
+		        <li><p>
+		            L'annotation <code>@Table</code> permet de spécifier le nom de la table (en base de données) dans laquelle nos instances d'articles devront
+		            être persistées. A défaut, la table doit avoir le même nom que la classe.
+		        </p></li>
+		        <li><p>
+                    L'annotation <code>@Id</code> indique que l'attribut <code>idArticle</code> de votre classe est « mappé » (mis en correspondance,
+                    si vous préférez) à la colonne de clé primaire en base de données. Comme aucune annotation <code>@Column</code> n'est ajoutée à l'attribut
+                    <code>idArticle</code>, la colonne doit avoir exactement le même nom. L'annotation <code>@GeneratedValue</code> indique que le moteur de 
+                    base de données à la responsabilité de générer les nouvelles valeurs pour la clé primaire en cas d'insertion de nouveaux objets. 
+		        </p></li>
+		        <li><p>
+                    Par défaut, un attribut est mappé à une colonne de même nom en base de données. C'est le cas pour <code>description</code> et <code>brand</code>.
+                    Si vous ne souhaitez pas mapper un attribut, indiquez-le via l'annotation <code>@Transient</code>. 
+		        </p></li>
+		        <li><p>
+                    L'annotation <code>@Column</code> utilisée pour le prix de vos articles permet d'indiquer le nom de la colonne correspondante en base de données,
+                    étant donné que les deux noms ne correspondent pas.
+		        </p></li>
+            </ul>
+            
+            <p>
+                Il faut savoir que vous auriez pu définir votre mapping directement sur les propriétés (les getters/setters) plutôt que sur les attributs.
+                JPA supporte les deux possibilités. Dans ce cas, placez les annotations devant les getters (<code>getIdArticle</code> et <code>getPrice</code>).
+                Lors d'un chargement d'une entité à partir de la base de données, l'objet en mémoire aurait été initialisé en passant par les setters.
+                Lors de la sauvegarde d'une entité, la récupération de l'état aurait été faite via les getter. Dans notre cas (mapping sur attributs), Hibernate
+                accédera directement aux attributs de nos articles.
+            </p>
+            
+            <p>
+                Pour une classe donnée, soit vous annotez les attributs, soit vous annotez les propriétés (getters/setters). En cas de mix entre les deux possibilités,
+                c'est l'annotation <code>@Id</code> qui permettra de trancher sur la stratégie à appliquer. Les annotations non cohérentes par rapport au positionnement
+                de <code>@ID</code> seront purement et simplement ignorées.
+            </p>
+            
+            <a name="configuration"></a><h3>La configuration de votre moteur de persistance</h3>
+            
+            <p>
+                Pour que votre moteur JPA puisse correctement fonctionner, il est nécessaire de le configurer : cela se fait via le fichier
+                <code>META-INF/persistence.xml</code>. Ce fichier doit être accessible à partir du CLASSPATH : sous Eclipse, cela veut dire que le dossier
+                <code>META-INF</code> doit être localisé dans votre dossier <code>src</code>, comme le montre la capture d'écran ci-dessous.
+            </p>
+            
+            <div style="text-align: center"><img src="Images/persistenceXmlLocation.png"></img></div>
+            
+            <p>
+                Et voici le contenu de ce fichier de configuration :
+            </p>
+
+            <center><table class='JwtCodeColorer' border='0' cellspacing='0' cellpadding='0' id='__id_auto_217__'><tr>
+<td style='text-align: right; width: 1%;' valign='top'><pre class='JwtCodeColorerLineNumbers'>
+ 1 
+ 2 
+ 3 
+ 4 
+ 5 
+ 6 
+ 7 
+ 8 
+ 9 
+ 10 
+ 11 
+ 12 
+ 13 
+ 14 
+ 15 
+ 16 
+ 17 
+ 18 
+ 19 
+ 20 
+ 21 
+ 22 
+</pre></td>
+<td valign='top'><pre class='JwtCodeColorerLines'>
+<span style='color: rgb(63,127,127);'>&lt;persistence </span><span style='color: rgb(127,0,127);'>xmlns=</span><span style='color: rgb(42,0,255);'>&quot;http://java.sun.com/xml/ns/persistence&quot;</span><span style='color: rgb(127,0,127);'>
+             xmlns:xsi=</span><span style='color: rgb(42,0,255);'>&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span style='color: rgb(127,0,127);'>
+             xsi:schemaLocation=</span><span style='color: rgb(42,0,255);'>&quot;http://java.sun.com/xml/ns/persistence 
+                   http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;</span><span style='color: rgb(127,0,127);'>
+             version=</span><span style='color: rgb(42,0,255);'>&quot;2.0&quot;</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+             
+    </span><span style='color: rgb(63,127,127);'>&lt;persistence-unit </span><span style='color: rgb(127,0,127);'>name=</span><span style='color: rgb(42,0,255);'>&quot;WebStore&quot;</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+        </span><span style='color: rgb(63,127,127);'>&lt;provider</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>org.hibernate.jpa.HibernatePersistenceProvider</span><span style='color: rgb(63,127,127);'>&lt;/provider</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+        
+        </span><span style='color: rgb(63,127,127);'>&lt;class</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>fr.koor.webstore.business.Article</span><span style='color: rgb(63,127,127);'>&lt;/class</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'> 
+        
+        </span><span style='color: rgb(63,127,127);'>&lt;properties</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+            </span><span style='color: rgb(63,127,127);'>&lt;property </span><span style='color: rgb(127,0,127);'>name=</span><span style='color: rgb(42,0,255);'>&quot;javax.persistence.jdbc.driver&quot;</span><span style='color: rgb(127,0,127);'> value=</span><span style='color: rgb(42,0,255);'>&quot;org.mariadb.jdbc.Driver&quot;</span><span style='color: rgb(127,0,127);'> </span><span style='color: rgb(63,127,127);'>/</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+            </span><span style='color: rgb(63,127,127);'>&lt;property </span><span style='color: rgb(127,0,127);'>name=</span><span style='color: rgb(42,0,255);'>&quot;javax.persistence.jdbc.url&quot;</span><span style='color: rgb(127,0,127);'> value=</span><span style='color: rgb(42,0,255);'>&quot;jdbc:mysql://localhost/WebStore&quot;</span><span style='color: rgb(127,0,127);'> </span><span style='color: rgb(63,127,127);'>/</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+            </span><span style='color: rgb(63,127,127);'>&lt;property </span><span style='color: rgb(127,0,127);'>name=</span><span style='color: rgb(42,0,255);'>&quot;javax.persistence.jdbc.user&quot;</span><span style='color: rgb(127,0,127);'> value=</span><span style='color: rgb(42,0,255);'>&quot;#user#&quot;</span><span style='color: rgb(127,0,127);'> </span><span style='color: rgb(63,127,127);'>/</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+            </span><span style='color: rgb(63,127,127);'>&lt;property </span><span style='color: rgb(127,0,127);'>name=</span><span style='color: rgb(42,0,255);'>&quot;javax.persistence.jdbc.password&quot;</span><span style='color: rgb(127,0,127);'> value=</span><span style='color: rgb(42,0,255);'>&quot;#password#&quot;</span><span style='color: rgb(127,0,127);'> </span><span style='color: rgb(63,127,127);'>/</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+            
+            </span><span style='color: rgb(63,127,127);'>&lt;property </span><span style='color: rgb(127,0,127);'>name=</span><span style='color: rgb(42,0,255);'>&quot;hibernate.dialect&quot;</span><span style='color: rgb(127,0,127);'> value=</span><span style='color: rgb(42,0,255);'>&quot;org.hibernate.dialect.MySQLDialect&quot;</span><span style='color: rgb(127,0,127);'> </span><span style='color: rgb(63,127,127);'>/</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+        </span><span style='color: rgb(63,127,127);'>&lt;/properties</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+    </span><span style='color: rgb(63,127,127);'>&lt;/persistence-unit</span><span style='color: rgb(63,127,127);'>&gt;</span><span style='color: rgb(0,0,0);'>
+    
+</span><span style='color: rgb(63,127,127);'>&lt;/persistence</span><span style='color: rgb(63,127,127);'>&gt;</span>
+</pre></td>
+</tr>
+<caption align='bottom' class='JwtCodeColorerCaption'>Fichier de configuration JPA : META-INF/persistence.xml</caption>
+</table></center>
+
+            
+            <div class="note">
+                bien entendu, veuillez remplacer les chaînes de caractères <code>#user#</code> et <code>#password#</code> par vos propres identifiants.
+            </div>
+            
+            <p>
+                La ligne correspondant au « provider » est, bien entendu, dépendante de l'implémentation JPA retenue (Hibernate dans notre cas).
+                Voici les chaînes de définitions associées aux principales implémentations :
+            </p>
+            
+            <table class="dataArray">
+	            <thead>    
+	                <tr>
+	                    <th>Nom de l'implémentation JPA</th>
+	                    <th>Configuration du provider</th>
+	                </tr>
+	            </thead>
+                <tbody>
+                    <tr>
+                        <td>Hibernate (RedHat)</td>
+                        <td>org.hibernate.jpa.HibernatePersistenceProvider</td>
+                    </tr>
+                    <tr>
+                        <td>Eclipse Link</td>
+                        <td>org.eclipse.persistence.jpa.PersistenceProvider</td>
+                    </tr>
+                    <tr>
+                        <td>Open JPA</td>
+                        <td>org.apache.openjpa.persistence.PersistenceProviderImpl</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a name="api"></a><h3>Utilisation de l'API JPA</h3>
+
+            <p>
+                Et voici maintenant un exemple de code JPA utilisant les quatre opérations CRUD sur nos articles.
+            </p>
+            
+            <center><table class='JwtCodeColorer' border='0' cellspacing='0' cellpadding='0' id='__id_auto_239__'><tr>
+<td style='text-align: right; width: 1%;' valign='top'><pre class='JwtCodeColorerLineNumbers'>
+ 1 
+ 2 
+ 3 
+ 4 
+ 5 
+ 6 
+ 7 
+ 8 
+ 9 
+ 10 
+ 11 
+ 12 
+ 13 
+ 14 
+ 15 
+ 16 
+ 17 
+ 18 
+ 19 
+ 20 
+ 21 
+ 22 
+ 23 
+ 24 
+ 25 
+ 26 
+ 27 
+ 28 
+ 29 
+ 30 
+ 31 
+ 32 
+ 33 
+ 34 
+ 35 
+ 36 
+ 37 
+ 38 
+ 39 
+ 40 
+ 41 
+ 42 
+ 43 
+ 44 
+ 45 
+ 46 
+ 47 
+ 48 
+ 49 
+ 50 
+ 51 
+ 52 
+ 53 
+ 54 
+ 55 
+ 56 
+ 57 
+ 58 
+ 59 
+ 60 
+ 61 
+ 62 
+ 63 
+ 64 
+ 65 
+ 66 
+ 67 
+</pre></td>
+<td valign='top'><pre class='JwtCodeColorerLines'>
+<span style='color:rgb(127,0,85); font-weight: bold'>package</span> com.is.webstore;
+
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> java.util.List;
+
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.EntityManager;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.EntityManagerFactory;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.EntityTransaction;
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> javax.persistence.Persistence;
+
+<span style='color:rgb(127,0,85); font-weight: bold'>import</span> com.is.webstore.business.Article;
+
+<span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>class</span> ConsoleJPA {
+
+    <span style='color:rgb(127,0,85); font-weight: bold'>public</span> <span style='color:rgb(127,0,85); font-weight: bold'>static</span> <span style='color:rgb(127,0,85); font-weight: bold'>void</span> main(String[] args) <span style='color:rgb(127,0,85); font-weight: bold'>throws</span> Exception {
+        EntityManagerFactory entityManagerFactory = <span style='color:rgb(127,0,85); font-weight: bold'>null</span>;
+        EntityManager entityManager = <span style='color:rgb(127,0,85); font-weight: bold'>null</span>;
+        <span style='color:rgb(127,0,85); font-weight: bold'>try</span> {
+            entityManagerFactory = Persistence.createEntityManagerFactory(<span style='color:rgb(42,0,255)'>"WebStore"</span>);
+            entityManager = entityManagerFactory.createEntityManager();
+        
+            System.out.println( <span style='color:rgb(42,0,255)'>"- Lecture de tous les articles -----------"</span> );
+            
+            List&lt;Article&gt; articles = entityManager.createQuery( <span style='color:rgb(42,0,255)'>"from Article"</span>, Article.<span style='color:rgb(127,0,85); font-weight: bold'>class</span> )
+                                   .getResultList();
+            <span style='color:rgb(127,0,85); font-weight: bold'>for</span> (Article article : articles) {
+                System.out.println( article );
+            }
+            
+            System.out.println( <span style='color:rgb(42,0,255)'>"- Insertion d'un nouvel article ----------"</span> );
+            
+            EntityTransaction trans = entityManager.getTransaction();
+            trans.begin();
+            
+            Article newArticle = <span style='color:rgb(127,0,85); font-weight: bold'>new</span> Article( <span style='color:rgb(42,0,255)'>"DBS"</span>, <span style='color:rgb(42,0,255)'>"Aston Martin"</span>, 200000 );
+            entityManager.persist( newArticle );
+    
+            List&lt;Article&gt; results = entityManager.createQuery(<span style='color:rgb(42,0,255)'>"from Article"</span>, Article.<span style='color:rgb(127,0,85); font-weight: bold'>class</span>).getResultList();
+            <span style='color:rgb(127,0,85); font-weight: bold'>for</span>( Article article : results) {
+                System.out.println( article );
+            }
+    
+            System.out.println( <span style='color:rgb(42,0,255)'>"- Modification d'un article --------------"</span> );
+        
+            newArticle.setPrice( 40000 );
+            entityManager.persist( newArticle );
+            
+            results = entityManager.createQuery(<span style='color:rgb(42,0,255)'>"from Article"</span>, Article.<span style='color:rgb(127,0,85); font-weight: bold'>class</span>).getResultList();
+            <span style='color:rgb(127,0,85); font-weight: bold'>for</span>( Article article : results) {
+                System.out.println( article );
+            }
+    
+            System.out.println( <span style='color:rgb(42,0,255)'>"- Suppression d'un article ---------------"</span> );
+            
+            entityManager.remove( newArticle );
+            
+            results = entityManager.createQuery(<span style='color:rgb(42,0,255)'>"from Article"</span>, Article.<span style='color:rgb(127,0,85); font-weight: bold'>class</span>).getResultList();
+            <span style='color:rgb(127,0,85); font-weight: bold'>for</span>( Article article : results) {
+                System.out.println( article );
+            }
+                    
+            trans.commit();
+        } <span style='color:rgb(127,0,85); font-weight: bold'>finally</span> {
+            <span style='color:rgb(127,0,85); font-weight: bold'>if</span> ( entityManager != <span style='color:rgb(127,0,85); font-weight: bold'>null</span> ) entityManager.close();
+            <span style='color:rgb(127,0,85); font-weight: bold'>if</span> ( entityManagerFactory != <span style='color:rgb(127,0,85); font-weight: bold'>null</span> ) entityManagerFactory.close();
+        }
+    }
+}
+</pre></td>
+</tr>
+<caption align='bottom' class='JwtCodeColorerCaption'>Utilisation de l'API JPA</caption>
+</table></center>
+
+
+
+            <div style="text-align: center">
+                <a class="navigationButton" href="javascript: document.querySelector( 'header nav a' ).click();" style="float: left; margin-right: 10px; padding-left: 10px; padding-right: 0px;">
+                    <img src="/Images/hamburger.png" style="width: 32px;"></img>
+                </a>
+                <a class="navigationButton" href="jee_jsf_template.wp" style="float: left;">
+                    <img src="/Images/leftArrow.png" style="width: 32px;"></img>
+                    Définition d'un template pour vos facelets
+                </a>
+                <a class="navigationButton" href="jee_jpa_logging.wp" style="float: right;">
+                    <img src="/Images/rightArrow.png" style="width: 32px;"></img>
+                    JPA et la journalisation avec Hibernate
+                </a>
+            </div> <br /> <br /> <br />
+            
+
+            <div style="margin: auto; text-align: center">
+
+    <script async="async" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" data-ad-client="ca-pub-6351935933260946" data-ad-slot="1929322918" style="display:inline-block;width:728px;height:90px"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+</div>
+
+            <br /> <br />
+
+            
+          
+        </div>
+        <footer xmlns:web="corelib.services.web.components">
+    <p style="text-align: center">
+        <span id='__id_auto_254_____id_auto_403__'>2022</span> © SARL Infini Software - Tous droits réservés 
+        <span style="float: right"><a href="/MentionsLegales.wp">Mentions légales</a></span>
+    </p>
+    
+    <hr style="background: white" />
+    
+    <p>
+        Les informations présentes dans ce site vous sont fournies dans le but de vous aider à acquérir les compétences nécessaires à 
+        l'utilisation des langages ou des technologies considérés. Infini Software ne pourra nullement être tenu responsable de l'utilisation
+        des informations présentes dans ce site. 
+    </p>
+    
+    <script type="text/javascript">
+        function gm( username ) {
+		    var m = username + "@infini-software.com";
+		    document.write( "\u003ca href='mai" + "lto:" + m + "'\u003e" + m + "\u003c/a\u003e" );
+		}
+    </script>
+    
+    <p>
+        De plus, si vous remarquez des erreurs ou des oublis dans ce document, n'hésitez surtout pas à nous le signaler en envoyant un mail
+        à l'adresse : <script type="text/javascript"> gm( "dominique.liard" );</script>.
+    </p>
+    
+    <p>
+        Les autres marques et les noms de produits cités dans ces documents sont la propriété de leurs éditeurs respectifs.
+    </p>
+    
+</footer>
+    </body>
+</html>
